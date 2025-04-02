@@ -20,14 +20,14 @@ items = sorted(set(item for transaction in dataset for item in transaction))
 df = pd.DataFrame([{item: (item in transaction) for item in items} for transaction in dataset])
 
 # cal frequent_itemsets
-frequent_itemsets = apriori(df, min_support=0.4, use_colnames=True)
+freq_items_fpgrowth = fpgrowth(df, min_support=0.4, use_colnames=True)
 
 # cal关联规则
-rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+rules_fpgrowth = association_rules(freq_items_fpgrowth, metric="confidence", min_threshold=0.7)
 
 # output result
-print("frequent_itemsets：")
-print(frequent_itemsets)
+print("\n=== FP-Growth frequent_itemsets ===")
+print(freq_items_fpgrowth)
 
-print("\n association_rules：")
-print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
+print("\n fpgrowth association_rules：")
+print(rules_fpgrowth[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
