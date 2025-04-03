@@ -4,8 +4,10 @@
 import pandas as pd
 from mlxtend.frequent_patterns import apriori, fpgrowth, association_rules
 
-# 定义自定义交易数据
+# transaction data
 dataset = [
+    ['milk', 'bread', 'butter'],
+    ['milk', 'bread', 'butter'],
     ['milk', 'bread', 'butter'],
     ['milk', 'bread'],
     ['milk', 'butter'],
@@ -15,9 +17,21 @@ dataset = [
     ['bread', 'egg'],
 ]
 
-# 转换为 Pandas DataFrame（One-Hot 编码）
+# to Pandas DataFrame, one hot encoding every transaction,
 items = sorted(set(item for transaction in dataset for item in transaction))
-df = pd.DataFrame([{item: (item in transaction) for item in items} for transaction in dataset])
+# df = pd.DataFrame([{item: (item in transaction) for item in items} for transaction in dataset])
+data_list = []
+for transaction in dataset:
+    transaction_dict = {}
+    for item in items:
+        transaction_dict[item] = item in transaction
+    data_list.append(transaction_dict)
+
+# print(data_list)
+# use pandas create DataFrame
+df = pd.DataFrame(data_list)
+print(df)
+
 
 # cal frequent_itemsets
 freq_items_fpgrowth = fpgrowth(df, min_support=0.4, use_colnames=True)
