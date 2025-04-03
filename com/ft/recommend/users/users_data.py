@@ -23,6 +23,9 @@ crs_classes = ['CRS Reportable', 'Non-Reportable']
 investment_vehicles = ['Stocks', 'Bonds', 'REITs', 'Private Equity', 'VC']
 client_classes = ['Standard', 'Premium', 'VIP']
 life_events = ['Marriage', 'Divorce', 'Retirement', 'Inheritance', 'None']
+risk_bands = ['low', 'med', 'high']
+behavior_profiles = ['reactive', 'long-term', 'short-term', 'contrarian']
+asset_types = ['Equities', 'Fixed Income', 'Real Estate', 'Private Equity', 'VC']
 
 # Generate synthetic data
 data = []
@@ -33,7 +36,7 @@ for i in range(1, 101):
     created = fake.date_time_between(start_date='-5y', end_date='now')
     updated = fake.date_time_between(start_date=created, end_date='now')
     qualified = fake.date_time_between(start_date=created, end_date='now') if is_accredited else None
-    activated = fake.date_time_between(start_date=created, end_date='now')
+    activated = fake.date_time_between(start_date=qualified, end_date='now')
     invested = fake.date_time_between(start_date=activated, end_date='now') if np.random.random() > 0.2 else None
 
     row = {
@@ -57,7 +60,7 @@ for i in range(1, 101):
             'America/Phoenix',
             'America/Anchorage',
             'America/Honolulu'
-        ]),
+        ], p=[0.3, 0.1, 0.1, 0.2, 0.1, 0.1,0.1]),
         'investing_as_us_entity': np.random.choice([True, False], p=[0.7, 0.3]),
         'qualified_at': qualified.strftime('%Y-%m-%d %H:%M:%S') if qualified else None,
         'activated_at': activated.strftime('%Y-%m-%d %H:%M:%S'),
@@ -94,7 +97,14 @@ for i in range(1, 101):
         'client_classification': np.random.choice(client_classes),
         'is_employee_of_financial_institution': np.random.choice([True, False], p=[0.2, 0.8]),
         'ml_risk_tolerance_type_id': np.random.randint(1, 6),
-        'life_events': np.random.choice(life_events)
+        'life_events': np.random.choice(life_events),
+        'risk_tolerance_band': np.random.choice(risk_bands),
+        'irr_target': round(np.random.uniform(5, 20), 2),
+        'ticket_size_range': np.random.choice([5000, 25000, 100000, 500000, 1000000]),
+        'preferred_regions': ', '.join(np.random.sample(['NA', 'EMEA', 'APAC', 'LATAM'], np.random.randint(1, 2))),
+        'preferred asset types': ', '.join(np.random.sample(asset_types, np.random.randint(1, 3))),
+        'portfolio_construction goals': np.random.choice(['Growth', 'Income', 'Balanced', 'Preservation']),
+        'behavioral_profile': np.random.choice(behavior_profiles)
     }
     data.append(row)
 
