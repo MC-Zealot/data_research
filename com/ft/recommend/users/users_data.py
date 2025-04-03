@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from faker import Faker
 from datetime import datetime, timedelta
+import random
 
 # Initialize Faker
 fake = Faker()
@@ -26,17 +27,29 @@ life_events = ['Marriage', 'Divorce', 'Retirement', 'Inheritance', 'None']
 risk_bands = ['low', 'med', 'high']
 behavior_profiles = ['reactive', 'long-term', 'short-term', 'contrarian']
 asset_types = ['Equities', 'Fixed Income', 'Real Estate', 'Private Equity', 'VC']
+us_regions = [
+    "Silicon Valley, CA",
+    "New York Metro, NY",
+    "Boston, MA",
+    "Austin, TX",
+    "Miami, FL",
+    "Chicago, IL",
+    "Seattle, WA",
+    "Denver, CO",
+    "Atlanta, GA",
+    "Research Triangle, NC"
+]
 
 # Generate synthetic data
 data = []
-for i in range(1, 101):
+for i in range(1, 21):
     is_institutional = np.random.choice([True, False], p=[0.3, 0.7])
     is_accredited = np.random.choice([True, False], p=[0.8, 0.2])
     dob = fake.date_of_birth(minimum_age=25, maximum_age=80)
     created = fake.date_time_between(start_date='-5y', end_date='now')
     updated = fake.date_time_between(start_date=created, end_date='now')
     qualified = fake.date_time_between(start_date=created, end_date='now') if is_accredited else None
-    activated = fake.date_time_between(start_date=qualified, end_date='now')
+    activated = fake.date_time_between(start_date=created, end_date='now')
     invested = fake.date_time_between(start_date=activated, end_date='now') if np.random.random() > 0.2 else None
 
     row = {
@@ -101,8 +114,8 @@ for i in range(1, 101):
         'risk_tolerance_band': np.random.choice(risk_bands),
         'irr_target': round(np.random.uniform(5, 20), 2),
         'ticket_size_range': np.random.choice([5000, 25000, 100000, 500000, 1000000]),
-        'preferred_regions': ', '.join(np.random.sample(['NA', 'EMEA', 'APAC', 'LATAM'], np.random.randint(1, 2))),
-        'preferred asset types': ', '.join(np.random.sample(asset_types, np.random.randint(1, 3))),
+        'preferred_regions': ', '.join(random.sample(us_regions, np.random.randint(1, 2))),
+        'preferred asset types': ', '.join(random.sample(asset_types, np.random.randint(1, 3))),
         'portfolio_construction goals': np.random.choice(['Growth', 'Income', 'Balanced', 'Preservation']),
         'behavioral_profile': np.random.choice(behavior_profiles)
     }
@@ -110,5 +123,5 @@ for i in range(1, 101):
 
 # Create DataFrame and save to CSV
 df = pd.DataFrame(data)
-df.to_csv('investor_data_100_rows.csv', index=False)
+df.to_csv('investor_data_20_rows.csv', index=False)
 print("Generated 100 rows of investor data in investor_data_100_rows.csv")
