@@ -40,6 +40,18 @@ us_regions = [
     "Research Triangle, NC"
 ]
 
+
+def generate_valid_us_phone():
+    # 生成有效的3位地区码（不含0或1开头）
+    area_code = str(random.randint(2, 9)) + ''.join([str(random.randint(0, 9)) for _ in range(2)])
+
+    # 生成有效的3位局号（不含0或1开头）
+    exchange = str(random.randint(2, 9)) + ''.join([str(random.randint(0, 9)) for _ in range(2)])
+
+    # 生成4位用户号
+    subscriber = ''.join([str(random.randint(0, 9)) for _ in range(4)])
+
+    return f"1{area_code}{exchange}{subscriber}"  # 带国家码1的11位格式
 # Generate synthetic data
 data = []
 for i in range(1, 21):
@@ -61,7 +73,7 @@ for i in range(1, 21):
         'updated_at': updated.strftime('%Y-%m-%d %H:%M:%S'),
         'first_name': fake.first_name(),
         'last_name': fake.last_name(),
-        'phone': fake.phone_number(),
+        'phone': generate_valid_us_phone(),
         'country_code': fake.country_calling_code(),
         'investment_stage_type_id': np.random.choice([1, 2, 3, 4], p=[0.6, 0.2, 0.15, 0.05]),
         # 'time_zone': fake.timezone(),
@@ -81,12 +93,12 @@ for i in range(1, 21):
         'lead_source': np.random.choice(lead_sources),
         'preferred_language': np.random.choice(languages),
         'investor_type': np.random.choice(investor_types),
-        'risk_tolerance_type_id': np.random.randint(1, 4),
-        'years_of_investment_experience': np.random.randint(0, 30),
+        'risk_tolerance_type_id': np.random.choice([1, 2, 3, 4], p=[0.6, 0.2, 0.15, 0.05]),
+        'years_of_investment_experience': min(20, int(np.random.exponential(scale=5))),
         'is_accredited_investor': is_accredited,
         'referral_source': fake.name() if np.random.random() > 0.7 else None,
-        'risk_score': np.random.randint(1, 11),
-        'investment_experience': np.random.choice(investment_exp),
+        'risk_score': min(10, int(np.random.exponential(scale=5))),
+        'investment_experience': np.random.choice(investment_exp, p=[0.6, 0.2, 0.15, 0.05]),
         'is_institutional_investor': is_institutional,
         'institution_name': fake.company() if is_institutional else None,
         'institution_type': np.random.choice(institution_types) if is_institutional else None,
@@ -124,4 +136,4 @@ for i in range(1, 21):
 # Create DataFrame and save to CSV
 df = pd.DataFrame(data)
 df.to_csv('investor_data_20_rows.csv', index=False)
-print("Generated 100 rows of investor data in investor_data_100_rows.csv")
+print("Generated 20 rows of investor data in investor_data_100_rows.csv")
