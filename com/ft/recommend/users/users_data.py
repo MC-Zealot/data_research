@@ -12,6 +12,7 @@ fake = Faker()
 
 # Define investor types and other categorical options
 investor_types = ['Individual', 'Joint', 'Trust', 'Entity']
+investment_profiles = ['Family Office', 'Registered Investment Advisor', 'Limited Partner']
 lead_sources = ['Referral', 'Conference', 'Advertising', 'Website', 'Partner']
 languages = ['English', 'Spanish', 'French', 'German', 'Chinese']
 risk_tolerances = ['Conservative', 'Moderate', 'Aggressive']
@@ -51,7 +52,7 @@ def generate_valid_us_phone():
     return f"1{area_code}{exchange}{subscriber}"
 # Generate synthetic data
 data = []
-for i in range(1, 10001):
+for i in range(1, 11):
     is_institutional = np.random.choice([True, False], p=[0.3, 0.7])
     is_accredited = np.random.choice([True, False], p=[0.8, 0.2])
     dob = fake.date_of_birth(minimum_age=25, maximum_age=80)
@@ -65,13 +66,17 @@ for i in range(1, 10001):
 
         'id': 10000 + i,
         ####### key features for users investment###########
-        'irr_target': round(np.random.uniform(5, 20), 2),
-        'ticket_size_range': np.random.choice([5000, 25000, 100000, 500000, 1000000]),
-        'preferred_regions': ', '.join(random.sample(us_regions, np.random.randint(1, 2))),
-        'preferred asset types': ', '.join(random.sample(asset_types, np.random.randint(1, 3))),
-        'portfolio_construction goals': np.random.choice(['Growth', 'Income', 'Balanced', 'Preservation']),
-        'behavioral_profile': np.random.choice(behavior_profiles),
+        'irr_target': round(np.random.uniform(20, 60), 2)/100,
         'risk_tolerance_type_id': np.random.choice([1, 2, 3, 4], p=[0.6, 0.2, 0.15, 0.05]),
+        'liquidity_preference': np.random.choice(liquidity_prefs),
+        'investor_type': np.random.choice(investor_types),
+        'investment_profile': np.random.choice(investor_types),
+
+        'preferred_regions': ', '.join(random.sample(us_regions, np.random.randint(1, 2))),
+        'preferred_asset_types': ', '.join(random.sample(asset_types, np.random.randint(1, 3))),
+        'portfolio_construction_goals': np.random.choice(['Growth', 'Income', 'Balanced', 'Preservation']),
+        'behavioral_profile': np.random.choice(behavior_profiles),
+        'ticket_size_range': np.random.choice([5000, 25000, 100000, 500000, 1000000]),
         #########################################################
         'date_of_birth': dob.strftime('%Y-%m-%d'),
         'email': fake.email(),
@@ -98,7 +103,7 @@ for i in range(1, 10001):
         'invested_at': invested.strftime('%Y-%m-%d %H:%M:%S') if invested else None,
         'lead_source': np.random.choice(lead_sources),
         'preferred_language': np.random.choice(languages),
-        'investor_type': np.random.choice(investor_types),
+
 
         'years_of_investment_experience': min(20, int(np.random.exponential(scale=5))),
         'is_accredited_investor': is_accredited,
@@ -118,7 +123,7 @@ for i in range(1, 10001):
         'preferred_investment_vehicles': ', '.join(np.random.choice(investment_vehicles, size=np.random.randint(1, 4), replace=False)),
         'interested_in_private_placements': np.random.choice([True, False], p=[0.6, 0.4]),
         'interested_in_secondary_market': np.random.choice([True, False]),
-        'liquidity_preference': np.random.choice(liquidity_prefs),
+
         'has_offshore_accounts': np.random.choice([True, False], p=[0.3, 0.7]),
         'offshore_account_jurisdictions': fake.country() if np.random.random() > 0.7 else None,
         'is_professional_investor': np.random.choice([True, False], p=[0.3, 0.7]),
@@ -135,5 +140,5 @@ for i in range(1, 10001):
 
 # Create DataFrame and save to CSV
 df = pd.DataFrame(data)
-df.to_csv('investor_data_10000_rows.csv', index=False)
-print("Generated 10000 rows of investor data in investor_data_100_rows.csv")
+df.to_csv('investor_data_10_rows.csv', index=False)
+print("Generated 10 rows of investor data in investor_data_100_rows.csv")
